@@ -44,15 +44,14 @@ dummy_last = DummyOperator(
     dag=dag,
 )
 
-def print_date(exec_date, **context):
-    print(exec_date)
+def print_date(**context):
+    print(context['execution_date'])
     return "Success"
 
 # [START howto_operator_bash]
 py_task = PythonOperator(
     task_id='py_task',
     python_callable=print_date,
-    op_args=['{{ execution_date }}'],
     provide_context=True,
     dag=dag,
 )
