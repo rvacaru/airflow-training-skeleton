@@ -29,7 +29,7 @@ from airflow.operators.http_operator import SimpleHttpOperator
 
 args = {
     'owner': 'Airflow',
-    'start_date': airflow.utils.dates.days_ago(5),
+    'start_date': airflow.utils.dates.days_ago(10)
 }
 
 dag = DAG(
@@ -42,7 +42,6 @@ dag = DAG(
 dummy_last = DummyOperator(
     task_id='run_this_last',
     dag=dag,
-    trigger_rule='one_success',
 )
 
 rocket = SimpleHttpOperator(
@@ -64,7 +63,7 @@ printrocket = PythonOperator(
     task_id='print',
     python_callable=printrockets,
     provide_context=True,
-    dag=dag,
+    dag=dag
 )
 
 rocket >> printrocket >> dummy_last
