@@ -25,6 +25,7 @@ import airflow
 from airflow.models import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.dummy_operator import DummyOperator
+from airflow.operators.python_operator import PythonOperator
 
 args = {
     'owner': 'Airflow',
@@ -32,48 +33,38 @@ args = {
 }
 
 dag = DAG(
-    dag_id='example_bash_operator_raz',
+    dag_id='exercise3',
     default_args=args,
     schedule_interval='0 0 * * *',
     dagrun_timeout=timedelta(minutes=60),
 )
 
-run_this_last = DummyOperator(
+dummy_last = DummyOperator(
     task_id='run_this_last',
     dag=dag,
 )
 
-def echo_call():
-    print("1")
+def print_date(exec_date, **context):
+    print(exec_date)
     return "Success"
 
 # [START howto_operator_bash]
-run_this = PythonOperator(
-    task_id='run_after_loop',
-    python_callable='echo_call',
+py_task = PythonOperator(
+    task_id='py_task',
+    python_callable=print_date,
+    op_args=['{{ execution_date }}'],
+    provide_context=True,
     dag=dag,
 )
 # [END howto_operator_bash]
 
-run_this >> run_this_last
+secs = [1,5,10]
 
-def range_echo():
-    sleep(1000)
-    print("{{ task_instance_key_str }}")
-
-for i in range(3):
-    task = PythonOperator(
-        task_id='runme_' + str(i),
-        python_callable='range_echo',
+for i in secs:
+    taski = BashOperator(
+        task_id='sleep' + str(i),
+        bash_command='sleep {{ secs[i] }}',
         dag=dag,
     )
-    task >> run_this
-
-# [START howto_operator_bash_template]
-also_run_this = BashOperator(
-    task_id='also_run_this',
-    bash_command='echo "run_id={{ run_id }} | dag_run={{ dag_run }}"',
-    dag=dag,
-)
-# [END howto_operator_bash_template]
-also_run_this >> run_this_last
+    py_task >> taski
+    taski >> dummy_last
