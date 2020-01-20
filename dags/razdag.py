@@ -59,10 +59,10 @@ py_task = PythonOperator(
 
 secs = [1,5,10]
 
-for i in secs:
+for s in secs:
     taski = BashOperator(
-        task_id='sleep' + str(i),
-        bash_command='sleep ' + secs[i],
+        task_id='sleep' + str(s),
+        bash_command='sleep ' + s,
         dag=dag,
     )
     py_task >> taski
