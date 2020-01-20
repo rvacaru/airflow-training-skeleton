@@ -14,5 +14,3 @@ steps:
     - |
       composer_bucket=$(gcloud composer environments describe razvanvacaru-env --location europe-west3 --format='value(config.dagGcsPrefix)')
       gsutil -m rsync -r dags $composer_bucket
-      bucket_root=$(echo $composer_bucket | sed 's/\/dags//g')
-      gsutil -m rsync -r other $bucket_root
