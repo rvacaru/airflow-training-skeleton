@@ -42,11 +42,14 @@ run_this_last = DummyOperator(
     task_id='run_this_last',
     dag=dag,
 )
+def echo_call():
+    print("1")
+    return "Success"
 
 # [START howto_operator_bash]
-run_this = BashOperator(
+run_this = PythonOperator(
     task_id='run_after_loop',
-    bash_command='echo 1',
+    python_callable='echo_call',
     dag=dag,
 )
 # [END howto_operator_bash]
