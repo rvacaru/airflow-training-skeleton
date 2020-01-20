@@ -62,7 +62,7 @@ secs = [1,5,10]
 for i in secs:
     taski = BashOperator(
         task_id='sleep' + str(i),
-        bash_command='sleep {{ secs[i] }}',
+        bash_command='sleep ' + secs[i],
         dag=dag,
     )
     py_task >> taski
