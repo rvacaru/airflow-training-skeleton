@@ -58,19 +58,20 @@ weekday_task = PythonOperator(
     dag=dag,
 )
 
+# optimize with try exept
 weekday_person = {
     "Mon": "bob",
     "Tue": "joe",
-    "Wed": "ali",
     "Thu": "joe",
-    "Fri": "ali",
-    "Sat": "ali",
-    "Sun": "ali"
 }
 
 def define_oncall(**context):
     day = print_weekday(**context)
-    task_id = weekday_person[day]
+    try:
+        task_id = weekday_person[day]
+    except KeyError:
+        return "ali"
+
     return task_id
 
 branch_task = BranchPythonOperator(
