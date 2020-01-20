@@ -44,6 +44,7 @@ dag = DAG(
 dummy_last = DummyOperator(
     task_id='run_this_last',
     dag=dag,
+    trigger_rule='one_success',
 )
 
 def print_weekday(**context):
