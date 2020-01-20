@@ -24,8 +24,7 @@ import airflow
 from airflow.models import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import PythonOperator
-from airflow.operators.http_operator import SimpleHttpOperator
-
+from .operators.raz_http_operator import RazHttpOperator
 
 args = {
     'owner': 'Airflow',
@@ -44,7 +43,7 @@ dummy_last = DummyOperator(
     dag=dag,
 )
 
-rocket = SimpleHttpOperator(
+rocket = RazHttpOperator(
     task_id='get_rockets',
     method='GET',
     # http_conn_id='http_default',
