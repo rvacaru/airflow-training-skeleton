@@ -25,7 +25,6 @@ import airflow
 from airflow.models import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.dummy_operator import DummyOperator
-from airflow.operators.python_operator import PythonOperator
 
 args = {
     'owner': 'Airflow',
@@ -43,14 +42,11 @@ run_this_last = DummyOperator(
     task_id='run_this_last',
     dag=dag,
 )
-def echo_call():
-    print("1")
-    return "Success"
 
 # [START howto_operator_bash]
-run_this = PythonOperator(
+run_this = BashOperator(
     task_id='run_after_loop',
-    python_callable='echo_call',
+    bash_command='echo 1',
     dag=dag,
 )
 # [END howto_operator_bash]
